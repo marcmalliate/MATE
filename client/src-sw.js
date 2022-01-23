@@ -1,3 +1,4 @@
+const { StaleWhileRevalidate } = require("workbox-strategies");
 const { offlineFallback, warmStrategyCache } = require("workbox-recipes");
 const { CacheFirst } = require("workbox-strategies");
 const { registerRoute } = require("workbox-routing");
@@ -26,9 +27,9 @@ warmStrategyCache({
 
 registerRoute(({ request }) => request.mode === "navigate", pageCache);
 
-// Asset caching
+// Set up asset cache
 registerRoute(
-  // Callback function defined
+  // Callback function that will filter cache requests.
   ({ request }) => ["style", "script", "worker"].includes(request.destination),
   new StaleWhileRevalidate({
     cacheName: "asset-cache",
